@@ -2,6 +2,7 @@
 > **"Don't just guess if you need Quantum. Prove it."**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Release](https://img.shields.io/github/v/release/BeastAyyG/quantum-ready-demo?label=Latest%20Release&color=blue)](https://github.com/BeastAyyG/quantum-ready-demo/releases/latest)
 [![Quantum Simulator](https://img.shields.io/badge/Simulator-Grover's%20Algorithm-purple)](https://quantum-ready-demo.vercel.app/quantum-demo.html)
 [![Status](https://img.shields.io/badge/Status-Live%20Demo-success)](https://quantum-ready-demo.vercel.app)
 
