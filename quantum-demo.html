@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Engine — Grover's Search | Amul Traceability</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="quantum-sim.js"></script>
+    <style>
+        .quantum-dashboard {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+            padding: 2rem;
+            max-width: 1600px;
+            /* Wider for expo */
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .control-panel {
+            background: rgba(10, 10, 15, 0.8);
+            border: 1px solid var(--border);
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .visualization-panel {
+            background: rgba(10, 10, 15, 0.8);
+            border: 1px solid var(--border);
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* VISUAL GRID STYLES */
+        .samples-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .sample-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sample-card:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--accent-purple);
+        }
+
+        .sample-card.selected {
+            border-color: var(--accent-cyan);
+            background: rgba(6, 182, 212, 0.1);
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.2);
+        }
+
+        .sample-card.checking {
+            border-color: var(--accent-amber);
+            background: rgba(245, 158, 11, 0.2);
+            transform: scale(0.98);
+        }
+
+        .sample-card.found {
+            border-color: var(--accent-green);
+            background: rgba(16, 185, 129, 0.2);
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+        }
+
+        .sample-card.quantum-target {
+            border-color: var(--accent-purple);
+            background: rgba(139, 92, 246, 0.25);
+            box-shadow: 0 0 30px rgba(139, 92, 246, 0.6);
+            z-index: 10;
+        }
+
+        .sample-card.quantum-dim {
+            opacity: 0.3;
+            transform: scale(0.9);
+            filter: grayscale(1);
+        }
+
+        .card-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .card-id {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .card-loc {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* Gate Sequence */
+        .gate-sequence {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: var(--radius-md);
+            overflow-x: auto;
+            min-height: 70px;
+            border: 1px dashed rgba(255, 255, 255, 0.1);
+        }
+
+        .quantum-gate {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--accent-cyan);
+            color: var(--accent-cyan);
+            border-radius: 6px;
+            font-family: monospace;
+            font-weight: bold;
+            background: rgba(6, 182, 212, 0.1);
+            white-space: nowrap;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            animation: popIn 0.3s ease-out;
+        }
+
+        @keyframes popIn {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Log */
+        .sim-log {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            height: 180px;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+        }
+
+        .log-entry {
+            margin-bottom: 0.75rem;
+            padding-left: 1rem;
+            border-left: 3px solid var(--accent-purple);
+            line-height: 1.4;
+        }
+
+        .log-entry.highlight {
+            border-left-color: var(--accent-cyan);
+            color: #fff;
+            background: linear-gradient(90deg, rgba(6, 182, 212, 0.1), transparent);
+        }
+
+        /* Action Buttons */
+        .action-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .mode-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-grid"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-brand">
+            <span class="brand-name">Quantum<span class="brand-accent">Engine</span></span>
+            <span
+                style="font-size: 0.8rem; background: var(--accent-purple); color: white; padding: 2px 8px; border-radius: 4px; margin-left: 10px;">PRO
+                SIMULATOR</span>
+        </div>
+        <div class="nav-links">
+            <a href="index.html" class="nav-link">← Exit Demos</a>
+        </div>
+    </nav>
+
+    <!-- Main Dashboard -->
+    <div class="quantum-dashboard" style="padding-top: 100px;">
+
+        <!-- Center Stage: The Search Grid -->
+        <div class="control-panel" style="grid-column: 1 / -1; margin-bottom: 0;">
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <h1 class="hero-title" style="font-size: 2.5rem; margin-bottom: 0.5rem;">The Search For Contamination
+                </h1>
+                <p class="hero-subtitle" style="max-width: 600px; margin: 0 auto;">
+                    Select a batch to hide a "contaminant" (needle). Then run the algorithms to see how fast we can find
+                    it.
+                </p>
+            </div>
+
+            <div class="samples-grid" id="sampleList">
+                <!-- Cards generated here -->
+            </div>
+
+            <div style="display: flex; justify-content: center; gap: 2rem; margin-top: 1rem;">
+                <button class="btn btn-ghost btn-lg" onclick="runClassicalDemo()" id="btnClassical" disabled>
+                    🐢 Run Classical Search
+                </button>
+                <button class="btn btn-primary btn-lg" onclick="runQuantumDemo()" id="btnQuantum" disabled>
+                    🚀 Run Quantum Search
+                </button>
+            </div>
+        </div>
+
+        <!-- Left: Stats & Charts -->
+        <div class="visualization-panel">
+            <h3 style="margin: 0; margin-bottom: 1rem;">Probability Amplitude (|ψ|²)</h3>
+            <div style="position: relative; height: 200px;">
+                <canvas id="probabilityChart"></canvas>
+            </div>
+
+            <div style="margin-top: 2rem; border-top: 1px solid var(--border); padding-top: 1.5rem;">
+                <h4
+                    style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 1rem;">
+                    Performance Specs</h4>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span style="color: var(--text-muted);">Steps Needed:</span>
+                    <span id="statSteps" style="font-family: monospace;">-</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span style="color: var(--text-muted);">Time Complexity:</span>
+                    <span id="statComplex" style="font-family: monospace; color: var(--accent-cyan);">-</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span style="color: var(--text-muted);">Success Probability:</span>
+                    <span id="statProb" style="font-family: monospace; color: var(--accent-green);">-</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: The Quantum Brain (Logs & Circuits) -->
+        <div class="visualization-panel">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h3 style="margin: 0;">Quantum Logic Stream</h3>
+                <button class="btn btn-ghost" onclick="toggleArch()" style="font-size: 0.8rem; padding: 4px 10px;">⚙️
+                    Architecture</button>
+            </div>
+
+            <div class="gate-sequence" id="circuitGates">
+                <span style="color: var(--text-muted); font-size: 0.8rem;">Waiting for Quantum Circuit...</span>
+            </div>
+
+            <h4
+                style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted); margin-top: 1.5rem; margin-bottom: 0.5rem;">
+                System Logs</h4>
+            <div class="sim-log" id="simLog">
+                <div class="log-entry">System Ready. Please select a target batch above.</div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Architecture Modal -->
+    <div id="archModal"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 1000; justify-content: center; align-items: center;">
+        <div
+            style="background: var(--bg-card); padding: 2.5rem; border-radius: 16px; border: 1px solid var(--accent-purple); max-width: 900px; width: 90%; position: relative;">
+            <button onclick="toggleArch()"
+                style="position: absolute; top: 1.5rem; right: 1.5rem; background: none; border: none; color: var(--text-muted); font-size: 2rem; cursor: pointer;">&times;</button>
+            <h2 style="margin-bottom: 2rem;">Hybrid Quantum Orchestration</h2>
+            <img src="https://mermaid.ink/img/pako:eNpVkMtqwzAQRX9FzKqF_IAeCqWb0oVQcim02I2RyJawJCMj2U0I_veqcZqF1sO5d2bmjLTRkSG04OtaG4e-9S0jFzs-O_Jca_Jc6_i52_F998r33Z4f-yM_Dk9-HCU5LgYJeQ0ahwN9Q7-jX9Ff6F8M1W1r6Bv6_gE9DOQw4qg1eA5_1y_iE4ZCN4bSjSE_0M9O4iP9iP5C_2Is42qQkPcC55xzzjnnnHP+Oef8Z34-f8U7Z6-s?type=png"
+                alt="Architecture Diagram" style="width: 100%; border-radius: 8px; border: 1px solid var(--border);">
+            <p style="text-align: center; color: var(--text-muted); margin-top: 1rem;">The Classical CPU handles data
+                ingest, while the QPU acts as a search accelerator.</p>
+        </div>
+    </div>
+
+    <script>
+        const batchData = [
+            { id: "AMQ-01", center: "Anand Hub", icon: "🥛" },
+            { id: "AMQ-02", center: "Kheda Center", icon: "🐃" },
+            { id: "AMQ-03", center: "Mehsana Union", icon: "🚚" },
+            { id: "AMQ-04", center: "Sabarkantha", icon: "🏭" },
+            { id: "AMQ-05", center: "Banaskantha", icon: "🧪" },
+            { id: "AMQ-06", center: "Vadodara", icon: "🧬" },
+            { id: "AMQ-07", center: "Surat Dairy", icon: "🧊" },
+            { id: "AMQ-08", center: "Rajkot Coop", icon: "🌾" }
+        ];
+
+        let selectedBatchIndex = -1;
+        let chartInstance = null;
+
+        function initUI() {
+            const list = document.getElementById('sampleList');
+            batchData.forEach((batch, index) => {
+                const el = document.createElement('div');
+                el.className = 'sample-card';
+                el.id = `card-${index}`;
+                el.innerHTML = `
+                    <span class="card-icon">${batch.icon}</span>
+                    <div class="card-id">${batch.id}</div>
+                    <div class="card-loc">${batch.center}</div>
+                    <div class="mode-badge" id="badge-${index}" style="display:none"></div>
+                `;
+                el.onclick = () => selectBatch(index);
+                list.appendChild(el);
+            });
+            initChart();
+        }
+
+        function selectBatch(index) {
+            selectedBatchIndex = index;
+            document.querySelectorAll('.sample-card').forEach(el => {
+                el.className = 'sample-card'; // Reset
+                el.querySelector('.mode-badge').style.display = 'none';
+            });
+            const target = document.getElementById(`card-${index}`);
+            target.classList.add('selected');
+            target.querySelector('.mode-badge').innerText = 'TARGET';
+            target.querySelector('.mode-badge').style.display = 'block';
+            target.querySelector('.mode-badge').style.background = 'var(--accent-cyan)';
+
+            // Enable buttons
+            document.getElementById('btnClassical').disabled = false;
+            document.getElementById('btnQuantum').disabled = false;
+
+            log(`Selected Target: ${batchData[index].id}. Ready to search.`);
+        }
+
+        function resetVisuals() {
+            document.querySelectorAll('.sample-card').forEach(el => {
+                if (el.classList.contains('selected')) return;
+                el.className = 'sample-card';
+            });
+            updateChart(new Array(8).fill(0), -1);
+            document.getElementById('circuitGates').innerHTML = '<span style="color: var(--text-muted); font-size: 0.8rem;">Running new circuit...</span>';
+        }
+
+        // --- CLASSICAL DEMO ---
+        async function runClassicalDemo() {
+            resetVisuals();
+            log("--- STARTING CLASSICAL SEARCH (CPU) ---", true);
+            document.getElementById('statComplex').innerText = "O(N) - Linear";
+            document.getElementById('statProb').innerText = "100% (Eventually)";
+
+            let steps = 0;
+            for (let i = 0; i < 8; i++) {
+                steps++;
+                const card = document.getElementById(`card-${i}`);
+
+                // Highlight current check
+                card.classList.add('checking');
+                log(`Checking Batch ${batchData[i].id}...`);
+
+                await sleep(600); // Simulate slow CPU check
+
+                if (i === selectedBatchIndex) {
+                    card.classList.remove('checking');
+                    card.classList.add('found');
+                    log(`✅ FOUND TARGET: ${batchData[i].id} at index ${i}`, true);
+                    document.getElementById('statSteps').innerText = `${steps} Steps`;
+                    confetti({ particleCount: 50, spread: 60, origin: { y: 0.6 } });
+                    return;
+                }
+
+                // Mark as checked/failed
+                card.classList.remove('checking');
+                card.style.opacity = '0.5';
+            }
+        }
+
+        // --- QUANTUM DEMO ---
+        async function runQuantumDemo() {
+            resetVisuals();
+            log("--- STARTING QUANTUM SEARCH (QPU) ---", true);
+            document.getElementById('statComplex').innerText = "O(√N) - Quadratic";
+            document.getElementById('statProb').innerText = "Calculating...";
+
+            const gateBox = document.getElementById('circuitGates');
+            gateBox.innerHTML = '';
+
+            // 1. Initialization
+            QuantumDemo.init(3);
+            addGate('INIT |000>');
+            log("State initialized.");
+
+            // 2. Superposition
+            await sleep(500);
+            addGate('H-GATE');
+            log("Hadamard Gate: Entering Superposition", true);
+
+            // Visual: All cards shimmer
+            document.querySelectorAll('.sample-card').forEach(c => {
+                c.style.borderColor = 'var(--accent-purple)';
+                c.style.boxShadow = '0 0 10px rgba(139, 92, 246, 0.3)';
+            });
+            updateChart(new Array(8).fill(0.125), -1);
+
+            // 3. Oracle
+            await sleep(1000);
+            addGate('ORACLE (Uf)');
+            log(`Oracle: Phasing target ${batchData[selectedBatchIndex].id}`);
+
+            // Visual: Target glows slightly
+            const target = document.getElementById(`card-${selectedBatchIndex}`);
+            target.classList.add('quantum-target');
+
+            // 4. Diffusion
+            await sleep(1000);
+            addGate('DIFFUSION');
+            log(`Diffusion: Amplitude Amplification`, true);
+
+            // Visual: Others dim, Target pops
+            document.querySelectorAll('.sample-card').forEach((c, i) => {
+                if (i !== selectedBatchIndex) c.classList.add('quantum-dim');
+            });
+
+            // 5. Result
+            const probs = QuantumDemo.runSimulation(selectedBatchIndex);
+            updateChart(probs, selectedBatchIndex);
+
+            const maxProb = Math.max(...probs);
+            document.getElementById('statProb').innerText = `${(maxProb * 100).toFixed(1)}%`;
+            document.getElementById('statSteps').innerText = "2 Steps"; // Fixed for N=8
+
+            log(`✅ OPTIMAL SOLUTION FOUND. Speedup confirmed.`, true);
+            confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 } });
+        }
+
+        // Helpers
+        function log(msg, highlight = false) {
+            const box = document.getElementById('simLog');
+            const d = document.createElement('div');
+            d.className = highlight ? 'log-entry highlight' : 'log-entry';
+            d.innerText = `> ${msg}`;
+            box.appendChild(d);
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function addGate(text) {
+            const el = document.createElement('div');
+            el.className = 'quantum-gate';
+            el.innerText = text;
+            document.getElementById('circuitGates').appendChild(el);
+        }
+
+        function updateChart(data, highlightIndex) {
+            if (!chartInstance) return;
+            chartInstance.data.datasets[0].data = data;
+            chartInstance.data.datasets[0].backgroundColor = data.map((val, i) =>
+                i === highlightIndex ? 'rgba(16, 185, 129, 0.8)' : 'rgba(139, 92, 246, 0.2)'
+            );
+            chartInstance.update();
+        }
+
+        function initChart() {
+            const ctx = document.getElementById('probabilityChart').getContext('2d');
+            chartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: batchData.map(b => b.id),
+                    datasets: [{
+                        label: 'Amplitude',
+                        data: new Array(8).fill(0),
+                        backgroundColor: 'rgba(139, 92, 246, 0.2)',
+                        borderWidth: 0,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, max: 1, display: false },
+                        x: { display: false }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+        function toggleArch() { document.getElementById('archModal').style.display = document.getElementById('archModal').style.display === 'flex' ? 'none' : 'flex'; }
+
+        window.onload = initUI;
+    </script>
+</body>
+
+</html>

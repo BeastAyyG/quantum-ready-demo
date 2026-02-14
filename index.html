@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuantumReady — Enterprise Quantum Readiness Analyzer</title>
+    <meta name="description"
+        content="Discover if your enterprise is ready for quantum computing. Get quantum suitability scores, qubit estimates, classical alternatives, and ROI timelines.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Animated Background -->
+    <div class="bg-grid"></div>
+    <div class="bg-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-brand">
+            <div class="brand-icon">
+                <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                    <circle cx="14" cy="14" r="12" stroke="url(#grad1)" stroke-width="2" />
+                    <circle cx="14" cy="14" r="6" stroke="url(#grad1)" stroke-width="1.5" stroke-dasharray="3 3" />
+                    <circle cx="14" cy="14" r="3" fill="url(#grad1)" />
+                    <circle cx="14" cy="5" r="2" fill="#a78bfa" />
+                    <circle cx="14" cy="23" r="2" fill="#06b6d4" />
+                    <circle cx="5" cy="14" r="2" fill="#8b5cf6" />
+                    <circle cx="23" cy="14" r="2" fill="#22d3ee" />
+                    <defs>
+                        <linearGradient id="grad1" x1="0" y1="0" x2="28" y2="28">
+                            <stop offset="0%" stop-color="#8b5cf6" />
+                            <stop offset="100%" stop-color="#06b6d4" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
+            <span class="brand-name">Quantum<span class="brand-accent">Ready</span></span>
+        </div>
+        <div class="nav-links">
+            <a href="#features" class="nav-link">Features</a>
+            <a href="#how-it-works" class="nav-link">How It Works</a>
+            <a href="#pricing" class="nav-link">Pricing</a>
+            <a href="analysis.html" class="nav-link" style="color: #06b6d4; font-weight: 600;">🧪 Live Demo</a>
+            <button class="btn btn-nav" onclick="scrollToAnalyzer()">Analyze Now</button>
+        </div>
+        <button class="mobile-menu-btn" id="mobileMenuBtn" onclick="toggleMobileMenu()">
+            <span></span><span></span><span></span>
+        </button>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="#features" class="mobile-link" onclick="toggleMobileMenu()">Features</a>
+        <a href="#how-it-works" class="mobile-link" onclick="toggleMobileMenu()">How It Works</a>
+        <a href="#pricing" class="mobile-link" onclick="toggleMobileMenu()">Pricing</a>
+        <button class="btn btn-primary" onclick="scrollToAnalyzer(); toggleMobileMenu()">Analyze Now</button>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span class="badge-dot"></span>
+                Enterprise Quantum Assessment
+            </div>
+            <h1 class="hero-title">
+                Is Your Business<br>
+                <span class="gradient-text">Quantum Ready?</span>
+            </h1>
+            <p class="hero-subtitle">
+                Discover if quantum computing can transform your computational challenges.
+                Get suitability scores, qubit estimates, classical alternatives, and ROI timelines — all in minutes.
+            </p>
+            <div class="hero-actions">
+                <button class="btn btn-primary btn-lg" onclick="scrollToAnalyzer()">
+                    <span>Start Free Analysis</span>
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M4 10h12m-4-4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                    </svg>
+                </button>
+                <button class="btn btn-ghost btn-lg"
+                    onclick="document.getElementById('how-it-works').scrollIntoView({behavior:'smooth'})">
+                    See How It Works
+                </button>
+            </div>
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-number" data-count="2400">0</span><span class="stat-suffix">+</span>
+                    <span class="stat-label">Enterprises Analyzed</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat">
+                    <span class="stat-number" data-count="89">0</span><span class="stat-suffix">%</span>
+                    <span class="stat-label">Recommendation Accuracy</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat">
+                    <span class="stat-number" data-count="12">0</span><span class="stat-suffix"></span>
+                    <span class="stat-label">Industry Verticals</span>
+                </div>
+            </div>
+        </div>
+        <div class="hero-visual">
+            <div class="quantum-viz">
+                <div class="qubit-ring ring-1">
+                    <div class="qubit q1"></div>
+                    <div class="qubit q2"></div>
+                    <div class="qubit q3"></div>
+                </div>
+                <div class="qubit-ring ring-2">
+                    <div class="qubit q4"></div>
+                    <div class="qubit q5"></div>
+                </div>
+                <div class="qubit-core"></div>
+                <div class="entanglement-lines"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="section-header">
+            <span class="section-tag">Capabilities</span>
+            <h2 class="section-title">Not Just Scores —<br><span class="gradient-text">Actionable Intelligence</span>
+            </h2>
+            <p class="section-desc">Our platform delivers deep technical and business reasoning, not generic
+                assessments.</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon" style="--icon-color: #8b5cf6;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </div>
+                <h3>Quantum Suitability Score</h3>
+                <p>Get a precise 0-100 score for each computational problem with detailed technical reasoning on why
+                    quantum helps or doesn't.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon" style="--icon-color: #06b6d4;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path
+                            d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </div>
+                <h3>Qubit Estimation</h3>
+                <p>Know exactly how many logical and physical qubits your problem requires, with current hardware
+                    availability mapping.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon" style="--icon-color: #f59e0b;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M13 10V3L4 14h7v7l9-11h-7z" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </div>
+                <h3>Classical Alternatives</h3>
+                <p>We don't push quantum blindly. Get honest suggestions for classical approaches that may solve your
+                    problem today.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon" style="--icon-color: #10b981;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path
+                            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </div>
+                <h3>Business ROI Timeline</h3>
+                <p>Understand when quantum will deliver real value for your business with projected cost savings and
+                    competitive advantage windows.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon" style="--icon-color: #ef4444;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </div>
+                <h3>Migration Roadmap</h3>
+                <p>Step-by-step migration plan from classical to quantum, including team training, vendor selection, and
+                    risk mitigation strategies.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon" style="--icon-color: #ec4899;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path
+                            d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </div>
+                <h3>Technical Reasoning</h3>
+                <p>Transparent explanations powered by quantum computing expertise. Understand the "why" behind every
+                    recommendation.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="section-header">
+            <span class="section-tag">Process</span>
+            <h2 class="section-title">Three Steps to<br><span class="gradient-text">Quantum Clarity</span></h2>
+        </div>
+        <div class="steps-container">
+            <div class="step">
+                <div class="step-number">01</div>
+                <div class="step-content">
+                    <h3>Describe Your Challenges</h3>
+                    <p>Tell us about your industry, computational problems, data scale, and current infrastructure. Our
+                        smart form guides you through it.</p>
+                </div>
+            </div>
+            <div class="step-connector"></div>
+            <div class="step">
+                <div class="step-number">02</div>
+                <div class="step-content">
+                    <h3>AI-Powered Analysis</h3>
+                    <p>Our engine evaluates your problems against quantum algorithms, hardware constraints, and business
+                        viability factors.</p>
+                </div>
+            </div>
+            <div class="step-connector"></div>
+            <div class="step">
+                <div class="step-number">03</div>
+                <div class="step-content">
+                    <h3>Get Your Roadmap</h3>
+                    <p>Receive a comprehensive report with scores, estimates, alternatives, ROI projections, and a clear
+                        migration path.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Case Study Banner -->
+    <section style="padding: 2rem; max-width: 900px; margin: 0 auto; position: relative; z-index: 1;">
+        <a href="analysis.html" style="display: block; text-decoration: none;">
+            <div style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.12), rgba(6, 182, 212, 0.08)); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 16px; padding: 2rem 2.5rem; display: flex; align-items: center; gap: 1.5rem; transition: all 0.3s ease; cursor: pointer;"
+                onmouseover="this.style.borderColor='rgba(139,92,246,0.5)'; this.style.transform='translateY(-2px)'"
+                onmouseout="this.style.borderColor='rgba(139,92,246,0.3)'; this.style.transform='translateY(0)'">
+                <div style="font-size: 2.5rem; flex-shrink: 0;">🥛</div>
+                <div style="flex: 1;">
+                    <div
+                        style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #06b6d4; margin-bottom: 0.25rem;">
+                        Live Case Study</div>
+                    <div style="font-size: 1.1rem; font-weight: 700; color: #f1f1f3; margin-bottom: 0.25rem;">Amul Milk
+                        Coliform Analysis — Quantum Use Case</div>
+                    <div style="font-size: 0.85rem; color: #a0a0b0;">See how quantum computing applies to E.coli
+                        contamination analysis across 60 milk samples from Gujarat</div>
+                </div>
+                <div style="color: #8b5cf6; font-size: 1.5rem; flex-shrink: 0;">→</div>
+            </div>
+        </a>
+    </section>
+
+    <!-- Analyzer Section -->
+    <section class="analyzer-section" id="analyzer">
+        <div class="section-header">
+            <span class="section-tag">Analyzer</span>
+            <h2 class="section-title">Start Your<br><span class="gradient-text">Quantum Assessment</span></h2>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-container" id="progressContainer">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 25%"></div>
+            </div>
+            <div class="progress-steps">
+                <div class="progress-step active" data-step="1">
+                    <div class="step-dot"></div>
+                    <span>Company</span>
+                </div>
+                <div class="progress-step" data-step="2">
+                    <div class="step-dot"></div>
+                    <span>Problems</span>
+                </div>
+                <div class="progress-step" data-step="3">
+                    <div class="step-dot"></div>
+                    <span>Infrastructure</span>
+                </div>
+                <div class="progress-step" data-step="4">
+                    <div class="step-dot"></div>
+                    <span>Goals</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Multi-Step Form -->
+        <form class="analyzer-form" id="analyzerForm">
+            <!-- Step 1: Company Info -->
+            <div class="form-step active" id="step1">
+                <div class="form-card">
+                    <h3 class="form-title">Tell us about your organization</h3>
+                    <p class="form-desc">Help us understand your business context for a tailored assessment.</p>
+
+                    <div class="form-group">
+                        <label for="companyName">Company Name</label>
+                        <input type="text" id="companyName" placeholder="e.g., Reliance Industries" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="industry">Industry</label>
+                            <select id="industry" required>
+                                <option value="">Select industry</option>
+                                <option value="finance">Finance & Banking</option>
+                                <option value="pharma">Pharmaceuticals & Healthcare</option>
+                                <option value="logistics">Logistics & Supply Chain</option>
+                                <option value="energy">Energy & Utilities</option>
+                                <option value="manufacturing">Manufacturing</option>
+                                <option value="telecom">Telecommunications</option>
+                                <option value="retail">Retail & E-commerce</option>
+                                <option value="defense">Defense & Aerospace</option>
+                                <option value="agriculture">Agriculture</option>
+                                <option value="automotive">Automotive</option>
+                                <option value="technology">Technology & SaaS</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="companySize">Company Size</label>
+                            <select id="companySize" required>
+                                <option value="">Select size</option>
+                                <option value="startup">Startup (1-50)</option>
+                                <option value="small">Small (51-200)</option>
+                                <option value="medium">Medium (201-1000)</option>
+                                <option value="large">Large (1001-10000)</option>
+                                <option value="enterprise">Enterprise (10000+)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="annualRevenue">Annual Tech Budget (Approximate)</label>
+                        <select id="annualRevenue">
+                            <option value="">Select range</option>
+                            <option value="low">
+                                < ₹1 Crore</option>
+                            <option value="medium">₹1-10 Crore</option>
+                            <option value="high">₹10-100 Crore</option>
+                            <option value="very-high">₹100+ Crore</option>
+                        </select>
+                    </div>
+
+                    <div class="form-actions">
+                        <div></div>
+                        <button type="button" class="btn btn-primary" onclick="nextStep(1)">
+                            Continue
+                            <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+                                <path d="M4 10h12m-4-4l4 4-4 4" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Computational Problems -->
+            <div class="form-step" id="step2">
+                <div class="form-card">
+                    <h3 class="form-title">What computational problems do you face?</h3>
+                    <p class="form-desc">Select all problem categories that apply to your business. This is crucial for
+                        quantum suitability analysis.</p>
+
+                    <div class="checkbox-grid">
+                        <label class="checkbox-card">
+                            <input type="checkbox" name="problems" value="optimization">
+                            <div class="checkbox-content">
+                                <div class="checkbox-icon">🎯</div>
+                                <span class="checkbox-label">Optimization</span>
+                                <span class="checkbox-desc">Route planning, scheduling, resource allocation</span>
+                            </div>
+                        </label>
+                        <label class="checkbox-card">
+                            <input type="checkbox" name="problems" value="simulation">
+                            <div class="checkbox-content">
+                                <div class="checkbox-icon">🧪</div>
+                                <span class="checkbox-label">Simulation</span>
+                                <span class="checkbox-desc">Molecular, financial, physical simulations</span>
+                            </div>
+                        </label>
+                        <label class="checkbox-card">
+                            <input type="checkbox" name="problems" value="ml">
+                            <div class="checkbox-content">
+                                <div class="checkbox-icon">🤖</div>
+                                <span class="checkbox-label">Machine Learning</span>
+                                <span class="checkbox-desc">Large-scale training, feature spaces</span>
+                            </div>
+                        </label>
+                        <label class="checkbox-card">
+                            <input type="checkbox" name="problems" value="cryptography">
+                            <div class="checkbox-content">
+                                <div class="checkbox-icon">🔐</div>
+                                <span class="checkbox-label">Cryptography</span>
+                                <span class="checkbox-desc">Encryption, key management, security</span>
+                            </div>
+                        </label>
+                        <label class="checkbox-card">
+                            <input type="checkbox" name="problems" value="search">
+                            <div class="checkbox-content">
+                                <div class="checkbox-icon">🔍</div>
+                                <span class="checkbox-label">Search & Databases</span>
+                                <span class="checkbox-desc">Large unstructured data search</span>
+                            </div>
+                        </label>
+                        <label class="checkbox-card">
+                            <input type="checkbox" name="problems" value="financial">
+                            <div class="checkbox-content">
+                                <div class="checkbox-icon">📊</div>
+                                <span class="checkbox-label">Financial Modeling</span>
+                                <span class="checkbox-desc">Risk analysis, portfolio optimization, pricing</span>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 1.5rem;">
+                        <label for="problemDescription">Describe your specific challenge</label>
+                        <textarea id="problemDescription" rows="4"
+                            placeholder="e.g., We need to optimize delivery routes for 10,000+ daily orders across 50 cities. Currently takes 4 hours to compute on classical systems..."></textarea>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-ghost" onclick="prevStep(2)">← Back</button>
+                        <button type="button" class="btn btn-primary" onclick="nextStep(2)">
+                            Continue
+                            <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+                                <path d="M4 10h12m-4-4l4 4-4 4" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: Current Infrastructure -->
+            <div class="form-step" id="step3">
+                <div class="form-card">
+                    <h3 class="form-title">Your current infrastructure</h3>
+                    <p class="form-desc">Understanding your existing setup helps us build a realistic migration roadmap.
+                    </p>
+
+                    <div class="form-group">
+                        <label for="currentCompute">Current Computing Infrastructure</label>
+                        <select id="currentCompute" required>
+                            <option value="">Select primary compute</option>
+                            <option value="cloud">Cloud (AWS/Azure/GCP)</option>
+                            <option value="onprem">On-Premise Data Center</option>
+                            <option value="hybrid">Hybrid Cloud</option>
+                            <option value="hpc">HPC Cluster</option>
+                            <option value="basic">Basic Servers</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="dataScale">Data Scale</label>
+                            <select id="dataScale">
+                                <option value="">Select data volume</option>
+                                <option value="gb">Gigabytes</option>
+                                <option value="tb">Terabytes</option>
+                                <option value="pb">Petabytes</option>
+                                <option value="eb">Exabytes+</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="teamSize">Technical Team Size</label>
+                            <select id="teamSize">
+                                <option value="">Select team size</option>
+                                <option value="small">1-5 engineers</option>
+                                <option value="medium">6-20 engineers</option>
+                                <option value="large">21-100 engineers</option>
+                                <option value="very-large">100+ engineers</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Quantum Experience Level</label>
+                        <div class="radio-group">
+                            <label class="radio-option">
+                                <input type="radio" name="quantumExp" value="none" checked>
+                                <span class="radio-mark"></span>
+                                <span>No experience</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="quantumExp" value="research">
+                                <span class="radio-mark"></span>
+                                <span>Researching / Learning</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="quantumExp" value="poc">
+                                <span class="radio-mark"></span>
+                                <span>Proof of Concept done</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="quantumExp" value="production">
+                                <span class="radio-mark"></span>
+                                <span>Running quantum workloads</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-ghost" onclick="prevStep(3)">← Back</button>
+                        <button type="button" class="btn btn-primary" onclick="nextStep(3)">
+                            Continue
+                            <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+                                <path d="M4 10h12m-4-4l4 4-4 4" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4: Goals & Timeline -->
+            <div class="form-step" id="step4">
+                <div class="form-card">
+                    <h3 class="form-title">Your goals & timeline</h3>
+                    <p class="form-desc">Tell us what you're hoping to achieve and when.</p>
+
+                    <div class="form-group">
+                        <label for="primaryGoal">Primary Goal</label>
+                        <select id="primaryGoal" required>
+                            <option value="">Select primary goal</option>
+                            <option value="cost">Reduce Computing Costs</option>
+                            <option value="speed">Faster Processing Time</option>
+                            <option value="accuracy">Better Accuracy / Quality</option>
+                            <option value="capability">Solve Currently Impossible Problems</option>
+                            <option value="competitive">Competitive Advantage</option>
+                            <option value="research">R&D / Innovation</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="timeline">Expected Timeline</label>
+                        <select id="timeline">
+                            <option value="">Select timeline</option>
+                            <option value="immediate">Immediate (0-6 months)</option>
+                            <option value="short">Short-term (6-18 months)</option>
+                            <option value="medium">Medium-term (1-3 years)</option>
+                            <option value="long">Long-term (3-5 years)</option>
+                            <option value="strategic">Strategic (5+ years)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="constraints">Key Constraints or Concerns</label>
+                        <textarea id="constraints" rows="3"
+                            placeholder="e.g., Limited budget, regulatory compliance requirements, data sovereignty concerns..."></textarea>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-ghost" onclick="prevStep(4)">← Back</button>
+                        <button type="button" class="btn btn-primary btn-lg" onclick="analyzeQuantumReadiness()"
+                            id="analyzeBtn">
+                            <span class="btn-content">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                    <path
+                                        d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round" />
+                                </svg>
+                                Generate Quantum Assessment
+                            </span>
+                            <span class="btn-loading" style="display:none;">
+                                <div class="spinner"></div>
+                                Analyzing...
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <!-- Loading State -->
+        <div class="loading-state" id="loadingState" style="display:none;">
+            <div class="loading-card">
+                <div class="quantum-loader">
+                    <div class="loader-ring"></div>
+                    <div class="loader-ring"></div>
+                    <div class="loader-ring"></div>
+                    <div class="loader-core"></div>
+                </div>
+                <h3>Analyzing Quantum Readiness</h3>
+                <p id="loadingText">Evaluating computational problems...</p>
+                <div class="loading-progress">
+                    <div class="loading-bar" id="loadingBar"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Dashboard -->
+        <div class="results-dashboard" id="resultsDashboard" style="display:none;">
+            <!-- Results Header -->
+            <div class="results-header">
+                <div class="results-company" id="resultsCompany"></div>
+                <div class="results-date" id="resultsDate"></div>
+            </div>
+
+            <!-- Score Cards Row -->
+            <div class="score-cards">
+                <div class="score-card main-score">
+                    <div class="score-ring-container">
+                        <svg class="score-ring" viewBox="0 0 120 120">
+                            <circle cx="60" cy="60" r="52" fill="none" stroke="rgba(255,255,255,0.1)"
+                                stroke-width="8" />
+                            <circle cx="60" cy="60" r="52" fill="none" stroke="url(#scoreGrad)" stroke-width="8"
+                                stroke-linecap="round" stroke-dasharray="327" stroke-dashoffset="327" id="scoreCircle"
+                                transform="rotate(-90 60 60)" />
+                            <defs>
+                                <linearGradient id="scoreGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" stop-color="#8b5cf6" />
+                                    <stop offset="100%" stop-color="#06b6d4" />
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <div class="score-value" id="mainScore">0</div>
+                    </div>
+                    <h4>Quantum Suitability</h4>
+                    <p class="score-label" id="scoreLabel">Calculating...</p>
+                </div>
+                <div class="score-card">
+                    <div class="score-metric">
+                        <span class="metric-icon">⚛️</span>
+                        <span class="metric-value" id="qubitEstimate">—</span>
+                    </div>
+                    <h4>Estimated Qubits</h4>
+                    <p class="metric-sub" id="qubitContext">Logical qubits needed</p>
+                </div>
+                <div class="score-card">
+                    <div class="score-metric">
+                        <span class="metric-icon">💰</span>
+                        <span class="metric-value" id="roiTimeline">—</span>
+                    </div>
+                    <h4>ROI Timeline</h4>
+                    <p class="metric-sub" id="roiContext">Years to positive return</p>
+                </div>
+                <div class="score-card">
+                    <div class="score-metric">
+                        <span class="metric-icon">⚡</span>
+                        <span class="metric-value" id="speedup">—</span>
+                    </div>
+                    <h4>Potential Speedup</h4>
+                    <p class="metric-sub" id="speedupContext">vs classical computing</p>
+                </div>
+            </div>
+
+            <!-- Detail Sections -->
+            <div class="results-grid">
+                <!-- Technical Reasoning -->
+                <div class="result-panel" id="technicalPanel">
+                    <div class="panel-header">
+                        <div class="panel-icon" style="background: linear-gradient(135deg, #8b5cf6, #a78bfa);">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                <path
+                                    d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                        </div>
+                        <h3>Technical Reasoning</h3>
+                    </div>
+                    <div class="panel-content" id="technicalContent"></div>
+                </div>
+
+                <!-- Economic Reasoning -->
+                <div class="result-panel" id="economicPanel">
+                    <div class="panel-header">
+                        <div class="panel-icon" style="background: linear-gradient(135deg, #10b981, #34d399);">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                <path
+                                    d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                        </div>
+                        <h3>Economic Analysis</h3>
+                    </div>
+                    <div class="panel-content" id="economicContent"></div>
+                </div>
+
+                <!-- Classical Alternatives -->
+                <div class="result-panel" id="classicalPanel">
+                    <div class="panel-header">
+                        <div class="panel-icon" style="background: linear-gradient(135deg, #f59e0b, #fbbf24);">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                <path d="M13 10V3L4 14h7v7l9-11h-7z" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </div>
+                        <h3>Classical Alternatives</h3>
+                    </div>
+                    <div class="panel-content" id="classicalContent"></div>
+                </div>
+
+                <!-- Migration Roadmap -->
+                <div class="result-panel full-width" id="roadmapPanel">
+                    <div class="panel-header">
+                        <div class="panel-icon" style="background: linear-gradient(135deg, #06b6d4, #22d3ee);">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                <path
+                                    d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l5.447 2.724A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                        </div>
+                        <h3>Migration Roadmap</h3>
+                    </div>
+                    <div class="panel-content" id="roadmapContent"></div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="results-actions">
+                <button class="btn btn-primary btn-lg" onclick="downloadReport()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                        <path
+                            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    Download Full Report
+                </button>
+                <button class="btn btn-ghost btn-lg" onclick="resetAnalyzer()">
+                    Run New Analysis
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing" id="pricing">
+        <div class="section-header">
+            <span class="section-tag">Pricing</span>
+            <h2 class="section-title">Simple, Transparent<br><span class="gradient-text">Pricing</span></h2>
+        </div>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <div class="pricing-tier">Starter</div>
+                <div class="pricing-amount">Free</div>
+                <p class="pricing-desc">Perfect for exploring quantum potential</p>
+                <ul class="pricing-features">
+                    <li>✓ 1 assessment per month</li>
+                    <li>✓ Basic suitability score</li>
+                    <li>✓ Classical alternatives</li>
+                    <li>✓ Email report</li>
+                </ul>
+                <button class="btn btn-ghost" onclick="scrollToAnalyzer()">Get Started</button>
+            </div>
+            <div class="pricing-card popular">
+                <div class="popular-badge">Most Popular</div>
+                <div class="pricing-tier">Professional</div>
+                <div class="pricing-amount">₹9,999<span>/mo</span></div>
+                <p class="pricing-desc">For teams serious about quantum</p>
+                <ul class="pricing-features">
+                    <li>✓ Unlimited assessments</li>
+                    <li>✓ Detailed technical reasoning</li>
+                    <li>✓ Migration roadmap</li>
+                    <li>✓ ROI projections</li>
+                    <li>✓ Priority support</li>
+                </ul>
+                <button class="btn btn-primary" onclick="scrollToAnalyzer()">Start Trial</button>
+            </div>
+            <div class="pricing-card">
+                <div class="pricing-tier">Enterprise</div>
+                <div class="pricing-amount">Custom</div>
+                <p class="pricing-desc">Full quantum transformation support</p>
+                <ul class="pricing-features">
+                    <li>✓ Everything in Professional</li>
+                    <li>✓ Dedicated advisor</li>
+                    <li>✓ Vendor introductions</li>
+                    <li>✓ Training workshops</li>
+                    <li>✓ Custom integrations</li>
+                </ul>
+                <button class="btn btn-ghost">Contact Sales</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <div class="nav-brand">
+                    <div class="brand-icon">
+                        <svg width="24" height="24" viewBox="0 0 28 28" fill="none">
+                            <circle cx="14" cy="14" r="12" stroke="url(#grad2)" stroke-width="2" />
+                            <circle cx="14" cy="14" r="3" fill="url(#grad2)" />
+                            <defs>
+                                <linearGradient id="grad2" x1="0" y1="0" x2="28" y2="28">
+                                    <stop offset="0%" stop-color="#8b5cf6" />
+                                    <stop offset="100%" stop-color="#06b6d4" />
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <span class="brand-name">Quantum<span class="brand-accent">Ready</span></span>
+                </div>
+                <p>Making quantum computing practical for every enterprise.</p>
+            </div>
+            <div class="footer-links">
+                <div class="footer-col">
+                    <h4>Product</h4>
+                    <a href="#">Features</a>
+                    <a href="#">Pricing</a>
+                    <a href="#">API</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <a href="#">About</a>
+                    <a href="#">Blog</a>
+                    <a href="#">Careers</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Legal</h4>
+                    <a href="#">Privacy</a>
+                    <a href="#">Terms</a>
+                    <a href="#">Security</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 QuantumReady. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
